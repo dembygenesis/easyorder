@@ -1,0 +1,48 @@
+{
+  "products": [
+    { "id": 1, "name": "Wireless Noise-Cancelling Headphones", "price": 29999 },
+    { "id": 2, "name": "Mechanical Keyboard", "price": 14999 },
+    { "id": 3, "name": "USB-C Hub (7-in-1)", "price": 4999 },
+    { "id": 4, "name": "27\" 4K Monitor", "price": 59999 },
+    { "id": 5, "name": "Ergonomic Office Chair", "price": 39999 },
+    { "id": 6, "name": "Webcam 1080p", "price": 8999 },
+    { "id": 7, "name": "Standing Desk Mat", "price": 3499 },
+    { "id": 8, "name": "Portable SSD 1TB", "price": 10999 },
+    { "id": 9, "name": "Smartphone Stand", "price": 1999 },
+    { "id": 10, "name": "LED Desk Lamp", "price": 2999 }
+  ],
+  "warehouses": [
+    { "id": 1, "name": "East Coast Fulfillment Center", "latitude": 40.7128, "longitude": -74.006 },
+    { "id": 2, "name": "West Coast Distribution Hub", "latitude": 34.0522, "longitude": -118.2437 },
+    { "id": 3, "name": "Central Plains Warehouse", "latitude": 41.8781, "longitude": -87.6298 },
+    { "id": 4, "name": "Southern Regional Depot", "latitude": 29.7604, "longitude": -95.3698 },
+    { "id": 5, "name": "Pacific Northwest Facility", "latitude": 47.6062, "longitude": -122.3321 }
+  ],
+  "warehouse_inventory": [
+    { "id": 1, "warehouse_id": 1, "product_id": 1, "quantity": 120 },
+    { "id": 2, "warehouse_id": 1, "product_id": 2, "quantity": 85 },
+    { "id": 3, "warehouse_id": 1, "product_id": 3, "quantity": 200 },
+    { "id": 4, "warehouse_id": 1, "product_id": 4, "quantity": 30 },
+    { "id": 5, "warehouse_id": 1, "product_id": 5, "quantity": 15 },
+    { "id": 6, "warehouse_id": 2, "product_id": 1, "quantity": 95 },
+    { "id": 7, "warehouse_id": 2, "product_id": 3, "quantity": 310 },
+    { "id": 8, "warehouse_id": 2, "product_id": 6, "quantity": 60 },
+    { "id": 9, "warehouse_id": 2, "product_id": 7, "quantity": 140 },
+    { "id": 10, "warehouse_id": 2, "product_id": 8, "quantity": 75 },
+    { "id": 11, "warehouse_id": 3, "product_id": 2, "quantity": 110 },
+    { "id": 12, "warehouse_id": 3, "product_id": 4, "quantity": 20 },
+    { "id": 13, "warehouse_id": 3, "product_id": 5, "quantity": 25 },
+    { "id": 14, "warehouse_id": 3, "product_id": 9, "quantity": 300 },
+    { "id": 15, "warehouse_id": 3, "product_id": 10, "quantity": 180 },
+    { "id": 16, "warehouse_id": 4, "product_id": 1, "quantity": 70 },
+    { "id": 17, "warehouse_id": 4, "product_id": 6, "quantity": 45 },
+    { "id": 18, "warehouse_id": 4, "product_id": 7, "quantity": 200 },
+    { "id": 19, "warehouse_id": 4, "product_id": 8, "quantity": 90 },
+    { "id": 20, "warehouse_id": 4, "product_id": 10, "quantity": 130 },
+    { "id": 21, "warehouse_id": 5, "product_id": 2, "quantity": 60 },
+    { "id": 22, "warehouse_id": 5, "product_id": 3, "quantity": 175 },
+    { "id": 23, "warehouse_id": 5, "product_id": 4, "quantity": 20 },
+    { "id": 24, "warehouse_id": 5, "product_id": 9, "quantity": 220 },
+    { "id": 25, "warehouse_id": 5, "product_id": 10, "quantity": 95 }
+  ]
+}
