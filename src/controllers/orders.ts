@@ -3,6 +3,9 @@ import { Router } from 'express';
 import { createOrderSchema } from '../schemas.js';
 import { CustomerUpsertError } from '../errors.js';
 import { initializeOrder } from '../services/initialize-order.js';
+import { processOrderPayment } from '../services/process-order-payment.js';
+import { geocodeAddress } from '../mocks/geocode.js';
+import { finalizeOrder } from '../services/finalize-order/finalize-order.js';
 
 const router = Router();
 
@@ -16,9 +19,32 @@ router.post('/', async (request, response) => {
       return;
     }
 
-    await initializeOrder({ items: body.data.items, shippingAddress: body.data.shipping.address, expectedTotal: 0 });
+    const { customer, items, shipping, payment } = body.data;
 
-    response.json({ order: undefined });
+    const { latitude: shippingLatitude, longitude: shippingLongitude } = await geocodeAddress(shipping.address);
+
+    const order = await initializeOrder({
+      customer,
+      items,
+      shippingAddress: shipping.address,
+      shippingLatitude,
+      shippingLongitude,
+    });
+
+    const result = await processOrderPayment({ cardNumber: payment.cardNumber, order });
+
+    await finalizeOrder({
+      id: order.id,
+      status: result.success ? 'paid' : 'payment_failed',
+      paymentTransactionId: result.transactionId,
+    });
+
+    if (result.success === false) {
+      response.status(401).json({ message: 'Payment failed' });
+      return;
+    }
+
+    response.json({ order });
   } catch (error) {
     if (error instanceof CustomerUpsertError) {
       console.error('Unable to create or update customer:', error.message);

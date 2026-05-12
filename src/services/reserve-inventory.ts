@@ -9,13 +9,19 @@ type Input = {
   items: Pick<Item, 'productId' | 'quantity'>[];
 };
 
-export const reserveInventory = async ({ orderId, warehouseId, items }: Input, transaction: Transaction) => {
+export const reserveInventory = async (
+  { orderId, warehouseId, items }: Input,
+  transaction: Transaction,
+): Promise<void> => {
   const values = items
-    .map(({ productId, quantity }) => `\t(${orderId}, ${productId}, ${warehouseId}, ${quantity})`)
-    .join('\n');
+    .map(
+      ({ productId, quantity }) =>
+        `\t(${orderId}, ${productId}, ${warehouseId}, ${quantity}, NOW() + INTERVAL '10 minutes')`,
+    )
+    .join(',\n');
 
   const sql = `
-    INSERT INTO inventory_reservations (order_id, product_id, warehouse_id, quantity)
+    INSERT INTO inventory_reservations (order_id, product_id, warehouse_id, quantity, expires_at)
     VALUES
     ${values}
   `;

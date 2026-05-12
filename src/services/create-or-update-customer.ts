@@ -1,8 +1,8 @@
 import { QueryTypes, Transaction } from 'sequelize';
 
 import sequelize from '../database.js';
-import { CustomerUpsertError } from '../errors.js';
 import type { Customer } from '../types.js';
+import { CustomerUpsertError } from '../errors.js';
 
 type Input = Pick<Customer, 'email' | 'name'>;
 
@@ -10,7 +10,7 @@ export const createOrUpdateCustomer = async ({ email, name }: Input, transaction
   const sql = `
     INSERT INTO customers (email, name)
     VALUES (:email, :name)
-    ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name, updated_at = NOW()
+    ON CONFLICT (email) DO UPDATE SET updated_at = NOW()
     RETURNING id
   `;
 
@@ -25,7 +25,6 @@ export const createOrUpdateCustomer = async ({ email, name }: Input, transaction
   });
 
   if (customer === null) {
-    // TODO
     throw new CustomerUpsertError();
   }
 

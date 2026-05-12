@@ -4,17 +4,18 @@ type ProcessPaymentOptions = {
   description: string;
 };
 
-type ProcessPaymentResult = { success: true; transactionId: string } | { success: false };
+type ProcessPaymentResult = { success: boolean; transactionId: string };
 
 export const processPayment = (options: ProcessPaymentOptions) => {
   return new Promise<ProcessPaymentResult>((resolve) => {
     setTimeout(() => {
+      const transactionId = `transaction_${Math.random().toString(36).substring(2)}`;
       if (options.cardNumber.startsWith('9999')) {
         console.error('Payment failed:', options);
-        resolve({ success: false });
+        resolve({ success: false, transactionId });
       } else {
         console.log('Payment processed successfully:', options);
-        resolve({ success: true, transactionId: `transaction_${Math.random().toString(36).substring(2)}` });
+        resolve({ success: true, transactionId });
       }
     }, 5000);
   });

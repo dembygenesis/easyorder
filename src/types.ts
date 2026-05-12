@@ -8,6 +8,7 @@ export type Customer = {
 
 export type Item = {
   productId: number;
+  productName: string;
   unitPrice: number;
   quantity: number;
 };
@@ -18,10 +19,15 @@ export type Warehouse = {
 
 export type Order = {
   id: number;
+  items: Item[];
+  status: 'payment_pending' | 'paid' | 'payment_failed' | 'expired';
+  paymentTransactionId?: string;
 };
 
 export type Product = {
   id: number;
+  name: string;
+  price: number;
 };
 
 export type QueryOptions = {
