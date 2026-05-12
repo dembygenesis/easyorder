@@ -1,17 +1,11 @@
 import { QueryTypes, type Transaction } from 'sequelize';
 
-import sequelize from '../database.js';
-import { WarehouseNotFoundError } from '../errors.js';
-import type { Item, Warehouse } from '../types.js';
+import sequelize from '../../database.js';
+import type { Coordinates, Item, WarehouseRow } from '../../types/index.js';
 
-type Input = {
-  items: Item[];
-  latitude: number;
-  longitude: number;
-};
-
-export const findWarehouse = async (
-  { items, latitude, longitude }: Input,
+export const findClosestWarehouse = async (
+  items: Pick<Item, 'productId' | 'quantity'>[],
+  { latitude, longitude }: Coordinates,
   transaction: Transaction,
 ): Promise<number> => {
   const conditions = items
@@ -53,7 +47,7 @@ export const findWarehouse = async (
     LIMIT 1
   `;
 
-  const warehouse = await sequelize.query<Warehouse>(sql, {
+  const warehouse = await sequelize.query<WarehouseRow>(sql, {
     plain: true,
     replacements,
     transaction,
@@ -61,7 +55,7 @@ export const findWarehouse = async (
   });
 
   if (warehouse === null) {
-    throw new WarehouseNotFoundError();
+    throw new Error('Failed to find a warehouse');
   }
 
   return warehouse.id;

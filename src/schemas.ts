@@ -15,10 +15,12 @@ export const createOrderSchema = z.object({
     )
     .min(1),
   payment: z.object({
-    cardNumber: z
-      .string()
-      .trim()
-      .regex(/^[0-9]{16}$/, 'Invalid card number'),
+    card: z.object({
+      number: z
+        .string()
+        .trim()
+        .regex(/^[0-9]{16}$/, 'Invalid card number'),
+    }),
   }),
   shipping: z.object({
     address: z.string().trim().min(1),

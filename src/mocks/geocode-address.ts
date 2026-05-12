@@ -1,9 +1,7 @@
-interface Coordinates {
-  latitude: number;
-  longitude: number;
-}
+import type { Coordinates } from '../types/index.js';
+import { delay } from './delay.js';
 
-const LOCATIONS: Record<string, Coordinates> = {
+const COORDINATES: Record<string, Coordinates> = {
   'new york, ny': { latitude: 40.7128, longitude: -74.006 },
   'new york city, ny': { latitude: 40.7128, longitude: -74.006 },
   'boston, ma': { latitude: 42.3601, longitude: -71.0589 },
@@ -39,19 +37,25 @@ const LOCATIONS: Record<string, Coordinates> = {
 };
 
 export const geocodeAddress = async (address: string): Promise<Coordinates> => {
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  console.log(`POST https://api.easygeocode.com/geocode`, { address });
 
-  const [, city, state] = /\s*([A-Za-z\s]+),\s*([A-Z]{2})/.exec(address) ?? [];
+  await delay(100);
+
+  const [, city, state] = /([A-Za-z\s]+),\s*([A-Z]{2})/.exec(address) ?? [];
 
   if (city === undefined || state === undefined) {
-    throw new Error(`Unable to extract city and state: "${address}"`);
+    console.error(`422 https://api.easygeo.com/geocode`, { address });
+    throw new Error(`Failed to extract city and state from "${address}"`);
   }
 
-  const coordinates = LOCATIONS[`${city.toLowerCase()}, ${state.toLowerCase()}`];
+  const coordinates = COORDINATES[`${city.toLowerCase()}, ${state.toLowerCase()}`];
 
   if (coordinates === undefined) {
-    throw new Error(`Unable to geocode address: "${address}"`);
+    console.error(`404 https://api.easygeo.com/geocode`, { address });
+    throw new Error(`Failed to geocode "${address}"`);
   }
+
+  console.log(`200 https://api.easygeo.com/geocode`, coordinates);
 
   return coordinates;
 };

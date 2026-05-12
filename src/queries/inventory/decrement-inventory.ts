@@ -1,8 +1,8 @@
-import { QueryTypes, type Transaction } from 'sequelize';
+import { QueryTypes, Transaction } from 'sequelize';
 
 import sequelize from '../../database.js';
 
-export const reduceInventory = async (orderId: number, transaction: Transaction): Promise<void> => {
+export const decrementInventory = async (orderId: number, transaction: Transaction): Promise<void> => {
   const sql = `
     UPDATE warehouse_inventory wi
     SET quantity = wi.quantity - oi.quantity, updated_at = NOW()

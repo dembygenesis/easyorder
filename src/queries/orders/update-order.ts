@@ -1,12 +1,12 @@
 import { QueryTypes, Transaction } from 'sequelize';
 
-import sequelize from '../database.js';
-import type { Order } from '../types.js';
+import sequelize from '../../database.js';
+import type { Order } from '../../types/index.js';
 
 export const updateOrder = async (
   orderId: number,
   { status, paymentTransactionId }: Pick<Order, 'status' | 'paymentTransactionId'>,
-  transaction: Transaction,
+  transaction?: Transaction,
 ): Promise<void> => {
   const sql = `
     UPDATE orders

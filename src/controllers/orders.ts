@@ -4,8 +4,9 @@ import { createOrderSchema } from '../schemas.js';
 import { CustomerUpsertError } from '../errors.js';
 import { initializeOrder } from '../services/initialize-order.js';
 import { processOrderPayment } from '../services/process-order-payment.js';
-import { geocodeAddress } from '../mocks/geocode.js';
-import { finalizeOrder } from '../services/finalize-order/finalize-order.js';
+import { geocodeAddress } from '../mocks/geocode-address.js';
+import { completeOrder } from '../services/complete-order.js';
+import { updateOrder } from '../queries/orders/update-order.js';
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.post('/', async (request, response) => {
   try {
     const body = createOrderSchema.safeParse(request.body);
 
-    if (body.error) {
+    if (body.success === false) {
       console.error('Unable to parse request body:', body.error.issues);
       response.status(400).json({ message: 'The request body is invalid.' });
       return;
@@ -33,18 +34,14 @@ router.post('/', async (request, response) => {
 
     const result = await processOrderPayment({ cardNumber: payment.cardNumber, order });
 
-    await finalizeOrder({
-      id: order.id,
-      status: result.success ? 'paid' : 'payment_failed',
-      paymentTransactionId: result.transactionId,
-    });
-
     if (result.success === false) {
-      response.status(401).json({ message: 'Payment failed' });
+      await updateOrder(order.id, { status: 'payment_failed' });
+      response.status(402).json({ message: 'Payment failed.' });
       return;
     }
 
-    response.json({ order });
+    await completeOrder(order.id, result.transactionId);
+    response.status(201).json({ order });
   } catch (error) {
     if (error instanceof CustomerUpsertError) {
       console.error('Unable to create or update customer:', error.message);

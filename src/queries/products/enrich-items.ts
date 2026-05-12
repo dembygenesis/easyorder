@@ -1,7 +1,7 @@
 import { QueryTypes, Transaction } from 'sequelize';
 
-import sequelize from '../database.js';
-import type { Item } from '../types.js';
+import sequelize from '../../database.js';
+import type { Item } from '../../types/types.js';
 
 type Items = Pick<Item, 'productId' | 'unitPrice' | 'quantity'>[];
 
@@ -12,7 +12,7 @@ type Row = {
   quantity: number;
 };
 
-export const enrichItems = async (items: Items, transaction: Transaction): Promise<Item[]> => {
+export const _ = async (items: Items, transaction: Transaction): Promise<Item[]> => {
   const values = items
     .map(({ productId, unitPrice, quantity }) => `(${productId}, ${unitPrice}, ${quantity})`)
     .join(', ');

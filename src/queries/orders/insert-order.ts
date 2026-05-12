@@ -1,25 +1,25 @@
 import { QueryTypes, Transaction } from 'sequelize';
 
-import sequelize from '../database.js';
-import { InsertOrderError } from '../errors.js';
-import type { Order } from '../types.js';
+import sequelize from '../../database.js';
+import type { OrderRow } from '../../types/rows.js';
 
-type Input = {
+type Order = {
   customerId: number;
   warehouseId: number;
   shippingAddress: string;
 };
 
-export const createOrder = async (input: Input, transaction: Transaction): Promise<number> => {
-  const { customerId, warehouseId, shippingAddress } = input;
-
+export const insertOrder = async (
+  { customerId, warehouseId, shippingAddress }: Order,
+  transaction: Transaction,
+): Promise<number> => {
   const sql = `
     INSERT INTO orders (customer_id, warehouse_id, shipping_address)
     VALUES (:customerId, :warehouseId, :shippingAddress)
     RETURNING id
   `;
 
-  const order = await sequelize.query<Order>(sql, {
+  const row = await sequelize.query<Pick<OrderRow, 'id'>>(sql, {
     plain: true,
     replacements: {
       customerId,
@@ -30,9 +30,9 @@ export const createOrder = async (input: Input, transaction: Transaction): Promi
     type: QueryTypes.SELECT,
   });
 
-  if (order === null) {
-    throw new InsertOrderError();
+  if (row === null) {
+    throw new Error('Failed to insert order');
   }
 
-  return order.id;
+  return row.id;
 };
