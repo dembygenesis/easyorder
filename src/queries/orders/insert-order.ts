@@ -1,38 +1,39 @@
 import { QueryTypes, Transaction } from 'sequelize';
 
-import sequelize from '../../database.js';
-import type { OrderRow } from '../../types/rows.js';
+import sequelize from '../../sequelize.js';
 
-type Order = {
+type InseretOrderParams = {
   customerId: number;
   warehouseId: number;
-  shippingAddress: string;
+  shipping: {
+    address: string;
+    latitude: number;
+    longitude: number;
+  };
 };
 
-export const insertOrder = async (
-  { customerId, warehouseId, shippingAddress }: Order,
+const insertOrder = async (
+  { customerId, warehouseId, shipping }: InseretOrderParams,
   transaction: Transaction,
 ): Promise<number> => {
   const sql = `
-    INSERT INTO orders (customer_id, warehouse_id, shipping_address)
-    VALUES (:customerId, :warehouseId, :shippingAddress)
+    INSERT INTO orders (customer_id, warehouse_id, shipping_address, shipping_latitude, shipping_longitude)
+    VALUES (:customerId, :warehouseId, :address, :latitude, :longitude)
     RETURNING id
   `;
 
-  const row = await sequelize.query<Pick<OrderRow, 'id'>>(sql, {
+  const row = await sequelize.query<{ id: number }>(sql, {
     plain: true,
-    replacements: {
-      customerId,
-      warehouseId,
-      shippingAddress,
-    },
+    replacements: { customerId, warehouseId, ...shipping },
     transaction,
     type: QueryTypes.SELECT,
   });
 
   if (row === null) {
-    throw new Error('Failed to insert order');
+    throw new Error('TODO');
   }
 
   return row.id;
 };
+
+export default insertOrder;

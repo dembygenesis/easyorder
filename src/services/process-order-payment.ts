@@ -1,10 +1,13 @@
-import { processPayment, type PaymentResult } from '../mocks/process-payment.js';
-import type { Card, Order } from '../types/index.js';
+import processPayment, { type PaymentResult } from '../mocks/process-payment.js';
+import getOrderAmount from '../queries/orders/get-order-amount.js';
+import type { Card } from '../types.js';
 
-export const processOrderPayment = async (order: Pick<Order, 'id' | 'items'>, card: Card): Promise<PaymentResult> => {
-  const amount = order.items.reduce<number>((amount, { unitPrice, quantity }) => amount + unitPrice * quantity, 0);
+const processOrderPayment = async (orderId: number, card: Card): Promise<PaymentResult> => {
+  const amount = await getOrderAmount(orderId);
 
-  const description = `Payment for Order #${order.id}`;
+  const description = `Payment for Order #${orderId}`;
 
   return processPayment({ amount, card, description });
 };
+
+export default processOrderPayment;

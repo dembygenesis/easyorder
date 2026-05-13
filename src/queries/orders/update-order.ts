@@ -1,9 +1,9 @@
 import { QueryTypes, Transaction } from 'sequelize';
 
-import sequelize from '../../database.js';
-import type { Order } from '../../types/index.js';
+import sequelize from '../../sequelize.js';
+import type { Order } from '../../types.js';
 
-export const updateOrder = async (
+const updateOrder = async (
   orderId: number,
   { status, paymentTransactionId }: Pick<Order, 'status' | 'paymentTransactionId'>,
   transaction?: Transaction,
@@ -12,7 +12,7 @@ export const updateOrder = async (
     UPDATE orders
     SET
       status = :status,
-      payment_transaction_id = :paymentTransactionId,
+      ${paymentTransactionId ? 'payment_transaction_id = :paymentTransactionId,' : ''}
       updated_at = NOW()
     WHERE id = :orderId
   `;
@@ -23,3 +23,5 @@ export const updateOrder = async (
     type: QueryTypes.UPDATE,
   });
 };
+
+export default updateOrder;

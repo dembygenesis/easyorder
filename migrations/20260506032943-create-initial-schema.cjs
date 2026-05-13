@@ -43,8 +43,8 @@ module.exports = {
         warehouse_id INTEGER NOT NULL REFERENCES warehouses(id) ON DELETE CASCADE,
         status order_status NOT NULL DEFAULT 'payment_pending',
         shipping_address TEXT NOT NULL,
-        shipping_latitude DOUBLE PRECISION,
-        shipping_longitude DOUBLE PRECISION,
+        shipping_latitude DOUBLE PRECISION NOT NULL,
+        shipping_longitude DOUBLE PRECISION NOT NULL,
         payment_transaction_id VARCHAR(255),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

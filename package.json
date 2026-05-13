@@ -1,12 +1,12 @@
 {
-  "name": "easyorder",
+  "name": "relay",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf build",
-    "start": "node build/index.js",
     "dev": "tsx watch src/index.ts",
+    "start": "node build/index.js",
     "db:migrate": "sequelize-cli db:migrate",
     "db:seed": "sequelize-cli db:seed:all",
     "format": "prettier --write --cache .",

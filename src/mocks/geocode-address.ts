@@ -1,5 +1,5 @@
-import type { Coordinates } from '../types/index.js';
-import { delay } from './delay.js';
+import type { Coordinates } from '../types.js';
+import delay from './delay.js';
 
 const COORDINATES: Record<string, Coordinates> = {
   'new york, ny': { latitude: 40.7128, longitude: -74.006 },
@@ -36,17 +36,19 @@ const COORDINATES: Record<string, Coordinates> = {
   'salt lake city, ut': { latitude: 40.7608, longitude: -111.891 },
 };
 
-export const geocodeAddress = async (address: string): Promise<Coordinates> => {
+const geocodeAddress = async (address: string): Promise<Coordinates> => {
   console.log(`POST https://api.easygeocode.com/geocode`, { address });
 
   await delay(100);
 
-  const [, city, state] = /([A-Za-z\s]+),\s*([A-Z]{2})/.exec(address) ?? [];
+  const [, city, state] = /([A-Za-z][A-Za-z\s]*),\s*([A-Z]{2})/.exec(address) ?? [];
 
   if (city === undefined || state === undefined) {
     console.error(`422 https://api.easygeo.com/geocode`, { address });
     throw new Error(`Failed to extract city and state from "${address}"`);
   }
+
+  console.log(city, state);
 
   const coordinates = COORDINATES[`${city.toLowerCase()}, ${state.toLowerCase()}`];
 
@@ -59,3 +61,5 @@ export const geocodeAddress = async (address: string): Promise<Coordinates> => {
 
   return coordinates;
 };
+
+export default geocodeAddress;

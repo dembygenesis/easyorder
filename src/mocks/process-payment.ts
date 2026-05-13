@@ -1,11 +1,11 @@
-import { delay } from './delay.js';
+import delay from './delay.js';
 
 type ProcessPaymentParams = {
   amount: number;
   card: {
     number: string;
   };
-  description?: string;
+  description: string;
 };
 
 export type PaymentResult = {
@@ -15,7 +15,7 @@ export type PaymentResult = {
 
 const DECLINED_CARD_NUMBERS = ['6666666666666666', '9999999999999999'];
 
-export const processPayment = async ({ amount, card, description }: ProcessPaymentParams): Promise<PaymentResult> => {
+const processPayment = async ({ amount, card, description }: ProcessPaymentParams): Promise<PaymentResult> => {
   console.log(`POST https://api.easypay.com/payments`, { amount, card, description });
 
   await delay(5000);
@@ -30,3 +30,5 @@ export const processPayment = async ({ amount, card, description }: ProcessPayme
   console.log(`200 https://api.easypay.com/payments`, { id, amount, card, description });
   return { success: true, id };
 };
+
+export default processPayment;
