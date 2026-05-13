@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
+import { AppError } from '../errors.js';
 import { createOrderSchema } from '../schemas.js';
 import completeOrder from '../services/complete-order.js';
 import failOrder from '../services/fail-order.js';
 import initializeOrder from '../services/initialize-order.js';
 import processOrderPayment from '../services/process-order-payment.js';
 import getOrder from '../services/get-order.js';
-import { ProductNotFoundError } from '../errors.js';
 
 const router = Router();
 
@@ -41,6 +41,14 @@ router.post('/', async (request, response) => {
 
     response.status(201).json({ order });
   } catch (error) {
+    if (error instanceof AppError) {
+      if (error.statusCode >= 500) {
+        console.error('An unexpected error has occurred:', error);
+      }
+      response.status(error.statusCode).json({ message: error.message });
+      return;
+    }
+
     console.error('An unexpected error has occurred:', error);
     response.status(500).json({ message: 'An unexpected error occurred.' });
   }

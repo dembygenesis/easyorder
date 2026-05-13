@@ -1,3 +1,4 @@
+import { InvalidShippingAddressError, UnsupportedShippingLocationError } from '../errors.js';
 import type { Coordinates } from '../types.js';
 import delay from './delay.js';
 
@@ -45,7 +46,7 @@ const geocodeAddress = async (address: string): Promise<Coordinates> => {
 
   if (city === undefined || state === undefined) {
     console.error(`422 https://api.easygeo.com/geocode`, { address });
-    throw new Error(`Failed to extract city and state from "${address}"`);
+    throw new InvalidShippingAddressError(address);
   }
 
   console.log(city, state);
@@ -54,7 +55,7 @@ const geocodeAddress = async (address: string): Promise<Coordinates> => {
 
   if (coordinates === undefined) {
     console.error(`404 https://api.easygeo.com/geocode`, { address });
-    throw new Error(`Failed to geocode "${address}"`);
+    throw new UnsupportedShippingLocationError(address);
   }
 
   console.log(`200 https://api.easygeo.com/geocode`, coordinates);

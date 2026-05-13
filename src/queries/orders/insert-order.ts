@@ -1,5 +1,6 @@
 import { QueryTypes, Transaction } from 'sequelize';
 
+import { OrderInsertFailedError } from '../../errors.js';
 import sequelize from '../../sequelize.js';
 
 type InseretOrderParams = {
@@ -30,7 +31,7 @@ const insertOrder = async (
   });
 
   if (row === null) {
-    throw new Error('TODO');
+    throw new OrderInsertFailedError();
   }
 
   return row.id;

@@ -1,5 +1,6 @@
 import { QueryTypes, Transaction } from 'sequelize';
 
+import { CustomerInsertFailedError } from '../../errors.js';
 import sequelize from '../../sequelize.js';
 import type { Customer } from '../../types.js';
 
@@ -17,7 +18,7 @@ const insertCustomer = async (
   });
 
   if (row === null) {
-    throw new Error('TODO');
+    throw new CustomerInsertFailedError();
   }
 
   return row.id;

@@ -1,5 +1,6 @@
 import { QueryTypes, type Transaction } from 'sequelize';
 
+import { NoFulfillmentWarehouseError } from '../../errors.js';
 import sequelize from '../../sequelize.js';
 import type { Coordinates, Item } from '../../types.js';
 
@@ -56,7 +57,7 @@ const findClosestWarehouse = async (
   });
 
   if (row === null) {
-    throw new Error('TODO');
+    throw new NoFulfillmentWarehouseError();
   }
 
   return row.id;

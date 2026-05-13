@@ -1,5 +1,6 @@
 import { QueryTypes } from 'sequelize';
 
+import { OrderHasNoItemsError } from '../../errors.js';
 import sequelize from '../../sequelize.js';
 
 const getOrderAmount = async (orderId: number) => {
@@ -12,10 +13,8 @@ const getOrderAmount = async (orderId: number) => {
   });
 
   if (row === null) {
-    throw new Error('TODO');
+    throw new OrderHasNoItemsError(orderId);
   }
-
-  console.log('TODO:', typeof row.amount, row.amount);
 
   return row.amount;
 };
