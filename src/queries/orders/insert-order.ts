@@ -3,7 +3,7 @@ import { QueryTypes, Transaction } from 'sequelize';
 import { OrderInsertFailedError } from '../../errors.js';
 import sequelize from '../../sequelize.js';
 
-type InseretOrderParams = {
+type InsertOrderParams = {
   customerId: number;
   warehouseId: number;
   shipping: {
@@ -14,7 +14,7 @@ type InseretOrderParams = {
 };
 
 const insertOrder = async (
-  { customerId, warehouseId, shipping }: InseretOrderParams,
+  { customerId, warehouseId, shipping }: InsertOrderParams,
   transaction: Transaction,
 ): Promise<number> => {
   const sql = `
